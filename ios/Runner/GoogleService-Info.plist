@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>909944304587-clbdk1ldjimsellomj8dlu40k40b2267.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.909944304587-clbdk1ldjimsellomj8dlu40k40b2267</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>909944304587-15eji0h2p7o82ucdltt20dp3ob3vbqa3.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAy-A8YGw7Lut5_9endtnsxLSNm9JZNT5c</string>
+	<key>GCM_SENDER_ID</key>
+	<string>909944304587</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.spacecorpMessanger</string>
+	<key>PROJECT_ID</key>
+	<string>spacecorp-messanger</string>
+	<key>STORAGE_BUCKET</key>
+	<string>spacecorp-messanger.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:909944304587:ios:7bfbaed31bcf97525e3c4e</string>
+</dict>
+</plist>
