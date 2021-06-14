@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DataBaseMethods {
@@ -13,6 +15,42 @@ class DataBaseMethods {
         .collection("users")
         .doc(uid)
         .update({"status": status});
+  }
+
+  Future updateToken(String uid, String newToken) async {
+    return await FirebaseFirestore.instance
+        .collection("users")
+        .doc(uid)
+        .update({"token": newToken});
+  }
+
+  Future updateLogHistoryAndToken(String uid, String token) async {
+    Map<String, dynamic> infoMap = {
+      'OS': Platform.operatingSystem,
+      'token': token
+    };
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update(infoMap);
+
+    var result = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('logHistory')
+        .where('token', isEqualTo: token)
+        .get();
+
+    print(result.size);
+
+    if (result.size == 0) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('logHistory')
+          .add(infoMap);
+    }
   }
 
   Future markMessageAsReaded(

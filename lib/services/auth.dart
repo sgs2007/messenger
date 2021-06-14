@@ -1,7 +1,8 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:spacecorp_messanger/HomeScreen/home_screen.dart';
 import 'package:spacecorp_messanger/Authscreen/auth_screen.dart';
 import 'package:spacecorp_messanger/HomeScreen/home_screen2.dart';
 import 'package:spacecorp_messanger/helper_function/sharedpref_helper.dart';
@@ -35,6 +36,17 @@ class AuthMedthods {
       });
 
       await DataBaseMethods().updateStatus(user.uid, "online");
+      // String operationSystem = Platform.operatingSystem;
+      // String token = await FirebaseMessaging.instance.getToken();
+      // String status = "online";
+
+      // Map<String, dynamic> infoMap = {
+      //   'status': status,
+      //   'OS': operationSystem,
+      //   'token': token,
+      // };
+
+      // await DataBaseMethods().updateInformationAfterLogin(user.uid, infoMap);
 
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => HomeScreen2()));
@@ -113,12 +125,15 @@ class AuthMedthods {
             indexList.add(splitString[i].substring(0, j).toLowerCase());
           }
         }
+        String username = user.email.replaceAll("@gmail.com", "");
+        String token = await FirebaseMessaging.instance.getToken();
         Map<String, dynamic> userInfo = {
-          "username": user.email.replaceAll("@gmail.com", ""),
+          "username": username,
           "name": displayName,
           "position": position,
           "status": "offline",
           "searchIndex": indexList,
+          "token": token,
         };
 
         await DataBaseMethods().addUserInfo(user.uid, userInfo);

@@ -144,7 +144,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   child: Text("Ok"),
                 ),
               ],
-              title: Text("Permission for this action was denied"),
+              title: Text("Permission for ${type} was denied"),
               content: Text(
                   "Please go to the settings and grant permission for this action."),
             );

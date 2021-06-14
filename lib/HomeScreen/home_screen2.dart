@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spacecorp_messanger/Authscreen/auth_screen.dart';
 import 'package:spacecorp_messanger/HomeScreen/components/person_card.dart';
 import 'package:spacecorp_messanger/constant.dart';
+import 'package:spacecorp_messanger/main.dart';
 import 'package:spacecorp_messanger/services/auth.dart';
 import 'package:spacecorp_messanger/services/database.dart';
+import 'package:spacecorp_messanger/services/notifications.dart';
 
 class HomeScreen2 extends StatefulWidget {
   const HomeScreen2({Key key}) : super(key: key);
@@ -21,12 +24,8 @@ class _HomeScreen2State extends State<HomeScreen2> with WidgetsBindingObserver {
   String searchString;
   TextEditingController searchTextEditingController = TextEditingController();
   Stream userList, searchUserList;
-//Change color mode (dark/light mode)
-  changeMode() {
-    setState(() {
-      darkMode = !darkMode;
-    });
-  }
+
+  Notifications firebase;
 
 //Clear input after press clear button
   clearSearchInput() {
@@ -47,9 +46,19 @@ class _HomeScreen2State extends State<HomeScreen2> with WidgetsBindingObserver {
     searchUserList = await DataBaseMethods().getUserIndex(searchString);
   }
 
+  handleAsync() async {
+    String token = await firebase.getToken();
+    AuthMedthods().getCurrentUser().then((user) =>
+        {DataBaseMethods().updateLogHistoryAndToken(user.uid, token)});
+    print(token);
+  }
+
   @override
   void initState() {
     super.initState();
+    firebase = Notifications();
+    firebase.initialize();
+    handleAsync();
     getUserList();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -64,13 +73,19 @@ class _HomeScreen2State extends State<HomeScreen2> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.detached) {
+      print("detached");
       AuthMedthods().logOut();
     }
-    if (state == AppLifecycleState.inactive ||
-        state == AppLifecycleState.paused) {
-      print("paused");
+    if (state == AppLifecycleState.inactive) {
+      print("absent");
       AuthMedthods().getCurrentUser().then((value) {
         DataBaseMethods().updateStatus(value.uid, "absent");
+      });
+    }
+    if (state == AppLifecycleState.paused) {
+      print("paused");
+      AuthMedthods().getCurrentUser().then((value) {
+        DataBaseMethods().updateStatus(value.uid, "offline");
       });
     }
     if (state == AppLifecycleState.resumed) {
@@ -95,14 +110,6 @@ class _HomeScreen2State extends State<HomeScreen2> with WidgetsBindingObserver {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          // leading: IconButton(
-          //   onPressed: () {
-          //     changeMode();
-          //   },
-          //   icon: darkMode
-          //       ? Icon(Icons.wb_sunny_outlined)
-          //       : Icon(Icons.nights_stay_outlined),
-          // ),
           title: Text(
             "Space Corp",
             style: GoogleFonts.orbitron(
